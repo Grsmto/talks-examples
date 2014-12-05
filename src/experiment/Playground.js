@@ -26,7 +26,13 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], func
             this.context = this.canvas.getContext("2d");
             document.body.appendChild(this.canvas);
 
-            this.particle = new Particle(this.canvas.width/2, this.canvas.height/2);
+            this.particles = [];
+
+            for (var i = 0; i < 300; i++) {
+                var particle = new Particle(getRandomInt(0, Resize.screenWidth), getRandomInt(0, Resize.screenHeight));
+                this.particles.push(particle);
+            };
+
             this.vector = new Vector(1, 1);
         },
 
@@ -46,8 +52,10 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], func
                 this.stats.update();
             }
 
-            this.particle.position.add(this.vector);
-            this.particle.update(this.context);
+            this.particles.forEach(function(particle) {
+                particle.position.add(this.vector);
+                particle.update(this.context);
+            }.bind(this));
 
             requestAnimationFrame(this.animate.bind(this));
         },
