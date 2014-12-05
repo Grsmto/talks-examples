@@ -1,4 +1,4 @@
-define(['helpers/Resize', 'Stats', 'entities/Vector'], function(Resize, Stats, Vector) {
+define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], function(Resize, Stats, Particle, Vector) {
 
     var Playground = function()
     {
@@ -26,8 +26,8 @@ define(['helpers/Resize', 'Stats', 'entities/Vector'], function(Resize, Stats, V
             this.context = this.canvas.getContext("2d");
             document.body.appendChild(this.canvas);
 
-            this.location = new Vector(10, 10);
-            this.velocity = new Vector(1, 3);
+            this.particle = new Particle(this.canvas.width/2, this.canvas.height/2);
+            this.vector = new Vector(1, 1);
         },
 
         animate: function()
@@ -46,9 +46,8 @@ define(['helpers/Resize', 'Stats', 'entities/Vector'], function(Resize, Stats, V
                 this.stats.update();
             }
 
-            location.x += velocity.x;
-            location.y += velocity.y;
-            console.log(location.y);
+            this.particle.position.add(this.vector);
+            this.particle.update(this.context);
 
             requestAnimationFrame(this.animate.bind(this));
         },
