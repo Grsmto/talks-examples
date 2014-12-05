@@ -1,10 +1,9 @@
-define(['helpers/Resize', 'helpers/Mouse', 'Stats'], function(Resize, Mouse, Stats) {
+define(['helpers/Resize', 'Stats', 'entities/Vector'], function(Resize, Stats, Vector) {
 
     var Playground = function()
     {
         // Variables (usefull for dat.GUI)
         this.trails = false;
-        this.density = 80;
 
         this.isDebug = true;
         if(this.isDebug)
@@ -27,13 +26,8 @@ define(['helpers/Resize', 'helpers/Mouse', 'Stats'], function(Resize, Mouse, Sta
             this.context = this.canvas.getContext("2d");
             document.body.appendChild(this.canvas);
 
-            // Resize the canvas on resize events
-            Resize.resizables.push(this.canvas);
-
-            // Object init logic
-            // var p = new Particle(...)
-
-            this.mouse = new Mouse(Resize.screenWidth, Resize.screenHeight);
+            this.location = new Vector(10, 10);
+            this.velocity = new Vector(1, 3);
         },
 
         animate: function()
@@ -52,8 +46,9 @@ define(['helpers/Resize', 'helpers/Mouse', 'Stats'], function(Resize, Mouse, Sta
                 this.stats.update();
             }
 
-            // EXPERIMENT LOGIC
-            // particle.update(...)
+            location.x += velocity.x;
+            location.y += velocity.y;
+            console.log(location.y);
 
             requestAnimationFrame(this.animate.bind(this));
         },
