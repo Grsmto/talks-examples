@@ -33,7 +33,8 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], func
                 this.particles.push(particle);
             };
 
-            this.vector = new Vector(1, 1);
+            this.wind = new Vector(0.05, 0);
+            this.gravity = new Vector(0, 0.05);
         },
 
         animate: function()
@@ -53,7 +54,22 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], func
             }
 
             this.particles.forEach(function(particle) {
-                particle.position.add(this.vector);
+                particle.applyForce(this.wind.clone());
+                particle.applyForce(this.gravity.clone());
+
+                if (particle.position.x > this.canvas.width) {
+                      particle.position.x = this.canvas.width;
+                      particle.velocity.x *= -1;
+                    } else if (location.x < 0) {
+                      particle.velocity.x *= -1;
+                      particle.position.x = 0;
+                    }
+                 
+                    if (particle.position.y > this.canvas.height) {
+                      particle.velocity.y *= -1;
+                      particle.position.y = this.canvas.height;
+                    }
+
                 particle.update(this.context);
             }.bind(this));
 
