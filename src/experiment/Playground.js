@@ -1,4 +1,4 @@
-define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], function(Resize, Stats, Particle, Vector) {
+define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector', 'entities/Attractor'], function(Resize, Stats, Particle, Vector, Attractor) {
 
     var Playground = function()
     {
@@ -35,6 +35,8 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], func
 
             this.wind = new Vector(0.05, 0);
             this.gravity = new Vector(0, 0.05);
+
+            this.attractor = new Attractor(Resize.screenWidth/2, Resize.screenHeight/2);
         },
 
         animate: function()
@@ -53,25 +55,16 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector'], func
                 this.stats.update();
             }
 
-            this.particles.forEach(function(particle) {
-                particle.applyForce(this.wind.clone());
-                particle.applyForce(this.gravity.clone());
+            var time = (new Date()).getTime();
 
-                if (particle.position.x > this.canvas.width) {
-                      particle.position.x = this.canvas.width;
-                      particle.velocity.x *= -1;
-                    } else if (location.x < 0) {
-                      particle.velocity.x *= -1;
-                      particle.position.x = 0;
-                    }
-                 
-                    if (particle.position.y > this.canvas.height) {
-                      particle.velocity.y *= -1;
-                      particle.position.y = this.canvas.height;
-                    }
+            this.particles.forEach(function(particle) {
+
+                particle.applyForce(this.attractor.attract(particle));
 
                 particle.update(this.context);
             }.bind(this));
+
+            // this.attractor.position.x += Math.sin(time * 2 * Math.PI / 20000);
 
             requestAnimationFrame(this.animate.bind(this));
         },
