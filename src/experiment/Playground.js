@@ -36,7 +36,17 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector', 'enti
             this.wind = new Vector(0.05, 0);
             this.gravity = new Vector(0, 0.05);
 
-            this.attractor = new Attractor(Resize.screenWidth/2, Resize.screenHeight/2);
+            this.refractor = new Attractor(Resize.screenWidth/2, Resize.screenHeight/2);
+
+            window.addEventListener("click", onMouseClick.bind(this));
+
+            function onMouseClick(e) {
+                this.refractor.position = new Vector(e.x, e.y);
+
+                this.particles.forEach(function(particle) {
+                    particle.applyForce(this.refractor.repel(particle));
+                }.bind(this));
+            }
         },
 
         animate: function()
@@ -55,16 +65,9 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector', 'enti
                 this.stats.update();
             }
 
-            var time = (new Date()).getTime();
-
             this.particles.forEach(function(particle) {
-
-                particle.applyForce(this.attractor.attract(particle));
-
                 particle.update(this.context);
             }.bind(this));
-
-            // this.attractor.position.x += Math.sin(time * 2 * Math.PI / 20000);
 
             requestAnimationFrame(this.animate.bind(this));
         },
