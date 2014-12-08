@@ -76,7 +76,10 @@ define(function() {
         },
 
         normalize: function() {
-            return this.divide(this.length());
+            if (this.length() === 0) 
+                return 0;
+            else
+                return this.divide(this.length());
         },
 
         angle: function() {

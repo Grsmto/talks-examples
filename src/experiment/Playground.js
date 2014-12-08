@@ -66,6 +66,12 @@ define(['helpers/Resize', 'Stats', 'entities/Particle', 'entities/Vector', 'enti
             }
 
             this.particles.forEach(function(particle) {
+                var friction = particle.velocity.clone();
+                friction.multiply(-1);
+                friction.normalize();
+                friction.multiply(0.01);
+                particle.applyForce(friction);
+
                 particle.update(this.context);
             }.bind(this));
 
